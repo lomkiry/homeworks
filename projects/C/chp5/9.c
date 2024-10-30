@@ -1,3 +1,4 @@
+// Штука по какой то формуле использующая функцию
 #include <stdio.h>
 
 double expression(double n1, double n2);

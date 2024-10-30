@@ -1,3 +1,4 @@
+// Треугольничек с F до A
 #include <stdio.h>
 
 int main(void){

@@ -1,3 +1,4 @@
+// Слово в обратном порядке
 #include <stdio.h>
 #include <string.h>
 

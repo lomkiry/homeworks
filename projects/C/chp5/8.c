@@ -1,3 +1,4 @@
+// Штука по какой то формуле
 #include <stdio.h>
 
 int main(void){

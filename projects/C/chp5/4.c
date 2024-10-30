@@ -1,3 +1,4 @@
+// Треугольничек по алфавиту
 #include <stdio.h>
 
 int main(void) {

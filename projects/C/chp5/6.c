@@ -1,3 +1,4 @@
+// Табличка квадратов и кубиков
 #include <stdio.h>
 
 int main(void){

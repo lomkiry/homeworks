@@ -1,3 +1,4 @@
+// Восемь числе выводит в обратном порядке
 #include <stdio.h>
 #define LEN_ARR 7
 

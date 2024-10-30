@@ -1,3 +1,4 @@
+// Треугольничек из $
 #include <stdio.h>
 
 int main(void){
