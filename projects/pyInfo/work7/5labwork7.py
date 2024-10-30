@@ -1,4 +1,4 @@
-l = input("Введите хайку: ").split('/')
+l = input("Введите хайку: ").lower().split('/')
 
 vocals = 'уеыаоэяию'
 flag = True
@@ -11,9 +11,11 @@ if len(l) == 3:
         if i == 1:
             if c != 7:
                 flag = False
+                break
         else:
-            if c == 5:
+            if c != 5:
                 flag = False
+                break
 else:
     print("Не хайку. Должно быть 3 строки.")
     exit()
