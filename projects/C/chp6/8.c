@@ -1,7 +1,6 @@
 #include <stdio.h>
 #define BID_BET 1.5
 #define WORKING_HOURS 40
-#define OVERTIME 1.5
 #define TAX_FIRST_300 0.15
 #define TAX_NEXT_150 0.2
 #define TAX_LAST 0.25
