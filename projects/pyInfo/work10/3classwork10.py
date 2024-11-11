@@ -1,0 +1,1 @@
+print("Кол-во слов:", len(open("file2.txt").read().split()))

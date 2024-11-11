@@ -1,4 +1,4 @@
-s = input("Введите текст с повторами: ")
+s = open("file3.txt").read()
 l = s.split()
 result = []
 
@@ -7,4 +7,6 @@ for i in range(len(l)):
         result.append(l[i])
 
 s = ' '.join(result)
-print(s)
+
+f = open("res_task3.txt", 'w')
+f.write(s)
