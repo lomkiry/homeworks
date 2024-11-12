@@ -35,3 +35,5 @@ for i in range(3):
     for j in range(3):
         print(m[i][j], end=" ")
     print()
+
+map

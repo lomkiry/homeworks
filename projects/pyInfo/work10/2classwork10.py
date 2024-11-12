@@ -3,7 +3,7 @@ f = open("file1.txt")
 firstl = f.readline()
 
 for i in firstl:
-    if i in ".,!:;-":
+    if i in ".,!:;-()":
         firstl = firstl.replace(i, '', 1)
 
 words = firstl.split()
