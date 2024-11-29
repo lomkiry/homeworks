@@ -8,4 +8,4 @@ emails = {
 
 for i in emails:
     for j in emails[i]:
-        print(j+'@'+i)
+        print(j + '@' + i)
