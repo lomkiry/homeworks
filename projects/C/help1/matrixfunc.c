@@ -10,7 +10,6 @@ void inputmatrix(){
             int *p = (int *)matrix + i*COL + j;
             while (1)
             {
-                printf("Вводите: ");
                 if (scanf("%d", &n) == 0) {
                     printf("Ошибка Ввода!\n");
                     while(getchar() != '\n');
