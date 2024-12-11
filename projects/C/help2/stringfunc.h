@@ -9,9 +9,10 @@
 #define MAX_LEN_STR 100 // Кол-во символов в строке
 
 void func1();
-void func2(const wchar_t *word1);
+void func2(const char *word1);
 void func3();
 void func4();
-int mystrcmp(const wchar_t *str1, const wchar_t *str2);
-int mystrlen(const wchar_t *string);
-int isDemiter(wchar_t c);
+int mystrcmp(const char *str1, const char *str2);
+int mystrlen(const char *string);
+int isDemiter(char c);
+int isDemiterwchar(wchar_t c);

@@ -1,31 +1,36 @@
 #include "stringfunc.h"
 
-// Определяет является ли символ разделителем
-int isDemiter(wchar_t c) {
-    return c == L' ' || c == L'\n' || c == L'.' || c == L',' || c == L';' || c == L':' || c == L'?' || c == L'=' || c == L'(' || c == L')' || c == L'\"' || c == L'\'' || c == L'\0';
+// Возвращает длинну строки
+int mystrlen(const char *string) {
+    int counter = 0;
+    while (string[counter] != '\0')
+        counter++;
+    return counter;
 }
 
-// Функция возвращающая длину строки
-int mystrlen(const wchar_t *string) {
-    int len = 0;
-    while (*string != L'\0') {
-        len++;
-        string++;
-    }
-    return len;
+int isDemiterwchar(wchar_t c) {
+    return c == L' ' || c == L'\n' || c == L'.' || c == L',' || c == L';' || c == L':' || 
+           c == L'?' || c == L'!' || c == L'=' || c == L'(' || c == L')' || c == L'\"' || 
+           c == L'\0';
 }
 
-// Функция возвращающая 1, если строки совпадают, и 0 иначе
-int mystrcmp(const wchar_t *str1, const wchar_t *str2) {
-    int len1 = mystrlen(str1);
-    int len2 = mystrlen(str2);
+int isDemiter(char c) {
+    return c == ' ' || c == '\n' || c == '.' || c == ',' || c == ';' || c == ':' || c == '?' || 
+           c == '=' || c == '(' || c == ')' || c == '\"' || c == '\0';
+}
+
+int mystrcmp(const char *word1, const char *word2) {
+    int len1 = mystrlen(word1);
+    int len2 = mystrlen(word2);
 
     if (len1 != len2)
         return 0;
-    for (int i = 0; str1[i] != L'\0'; i++) {
-        if (str1[i] != str2[i])
+
+    for (int i = 0; i < len1; i++) {
+        if (word1[i] != word2[i])
             return 0;
     }
+
     return 1;
 }
 
@@ -55,133 +60,183 @@ void func1() {
                 printf("'\\n'\t\t%d\n", counts[i]);
             }
             else {
-                printf("'%lc'\t\t%d\n", (wchar_t)i, counts[i]);
+                printf("'%lc'\t\t\t%d\n", (wchar_t)i, counts[i]);
             }
         }
     }
 }
 
-// Функция поиска совпадений слова
-void func2(const wchar_t *word1) {
-    wchar_t word2[35] = {0};
-    wchar_t text[TERM_NUM][MAX_LEN_STR] = {0};
+void func2(const char *word1) {
     int count = 0;
+    char text[TERM_NUM][MAX_LEN_STR]; // 42 строки, каждая до 100 символов
+    char word2[35] = {0}; // Для хранения текущего слова
 
-    // Чтение строк
-    for (int i = 0; i < TERM_NUM; i++)
-        fgetws(text[i], MAX_LEN_STR, stdin);
+    for (int i = 0; i < TERM_NUM; i++) 
+        fgets(text[i], MAX_LEN_STR, stdin);
 
-    // Проходим по всем строкам
-    for (int i = 0; i < TERM_NUM; i++) {
+    // Проход по всем строкам
+    for (int i = 0; i < 42; i++) {
         int k = 0;
-        int j = 0;
-
-        // Обрабатываем строку по символам
-        while (text[i][k] != L'\0') {
-            // Пропускаем разделители
-            while (isDemiter(text[i][k])) {
+        while (text[i][k] != '\0') {
+            int j = 0;
+            // Извлечение слова
+            while (!isDemiter(text[i][k]) && text[i][k] != '\0') {
+                word2[j] = text[i][k];
                 k++;
+                j++;
             }
+            word2[j] = '\0'; // Завершение слова
 
-            // Если символ не разделитель, начинаем собирать слово
-            while (!isDemiter(text[i][k]) && text[i][k] != L'\0') {
-                word2[j++] = text[i][k++];
-            }
-            word2[j] = L'\0';  // Завершаем слово
-
-            // Если слово совпадает с искомым, увеличиваем счетчик
             if (mystrcmp(word1, word2)) {
                 count++;
             }
 
-            // Очищаем слово для следующей итерации
-            j = 0;
+            // Пропуск разделителей
+            while (isDemiter(text[i][k]) && text[i][k] != '\0') {
+                k++;
+            }
+        }
+    }
+
+    printf("Слово \"%s\" было введено %d раз.\n", word1, count);
+}
+
+// Подсчитывает, сколько слов начинается с последней буквы первого слова.
+void func3() {
+    int count = 0;
+    wchar_t text[TERM_NUM][MAX_LEN_STR]; 
+    wchar_t word[35] = {0};
+    wchar_t ch = L'\0';
+
+    for (int i = 0; i < TERM_NUM; i++) {
+        if (fgetws(text[i], MAX_LEN_STR, stdin) == NULL) {
+            break;
+        }
+    }
+
+    // Определяем последнюю букву первого слова
+    for (int i = 0; text[0][i] != L'\0'; i++) {
+        if (isDemiterwchar(text[0][i])) {
+            if (i > 0) {
+                ch = text[0][i-1]; // Последняя буква первого слова
+            }
+            break;
+        }
+    }
+
+    // Если не удалось определить последнюю букву, завершаем
+    if (ch == L'\0') {
+        wprintf(L"Не удалось определить последнюю букву первого слова.\n");
+        return;
+    }
+
+    // Подсчет слов, начинающихся с `ch`
+    for (int i = 0; i < TERM_NUM; i++) {
+        int k = 0;
+        while (text[i][k] != L'\0') {
+            int j = 0;
+
+            // Извлечение слова
+            while (!isDemiterwchar(text[i][k]) && text[i][k] != L'\0') {
+                word[j] = text[i][k];
+                k++;
+                j++;
+            }
+            word[j] = L'\0'; // Завершение слова
+
+            // Сравнение первой буквы слова с `ch`
+            if (word[0] == ch) {
+                count++;
+            }
+
+            // Пропуск разделителей
+            while (isDemiterwchar(text[i][k]) && text[i][k] != L'\0') {
+                k++;
+            }
         }
     }
 
     // Вывод результата
-    printf("Количество совпадений: %d\n", count);
+    wprintf(L"Количество слов, начинающихся с '%lc': %d\n", ch, count);
 }
 
 // Превращает русский текст в транслит русского текста. Пример кот -> kot, жук -> zhuk.
 void func4() {
     wchar_t text[TERM_NUM][MAX_LEN_STR] = {0};
 
-    // Чтение строк
     for (int i = 0; i < TERM_NUM; i++)
         fgetws(text[i], MAX_LEN_STR, stdin);
 
-    // Обработка текста
     for (int i = 0; i < TERM_NUM; i++) {
         for (int j = 0; text[i][j] != L'\0'; j++) {
             switch (text[i][j]) {
-                case L'а': putchar('a'); break;
-                case L'б': putchar('b'); break;
-                case L'в': putchar('v'); break;
-                case L'г': putchar('g'); break;
-                case L'д': putchar('d'); break;
-                case L'е': putchar('e'); break;
-                case L'ё': putchar('y'); putchar('o'); break;
-                case L'ж': putchar('z'); putchar('h'); break;
-                case L'з': putchar('z'); break;
-                case L'и': putchar('i'); break;
-                case L'й': putchar('j'); break;
-                case L'к': putchar('k'); break;
-                case L'л': putchar('l'); break;
-                case L'м': putchar('m'); break;
-                case L'н': putchar('n'); break;
-                case L'о': putchar('o'); break;
-                case L'п': putchar('p'); break;
-                case L'р': putchar('r'); break;
-                case L'с': putchar('s'); break;
-                case L'т': putchar('t'); break;
-                case L'у': putchar('u'); break;
-                case L'ф': putchar('f'); break;
-                case L'х': putchar('h'); break;
-                case L'ц': putchar('c'); break;
-                case L'ч': putchar('c'); putchar('h'); break;
-                case L'ш': putchar('s'); putchar('h'); break;
-                case L'щ': putchar('s'); putchar('h'); putchar('c'); putchar('h'); break;
-                case L'ъ': putchar('\"'); break;
-                case L'ы': putchar('y'); break;
-                case L'ь': putchar('\''); break;
-                case L'э': putchar('e'); break;
-                case L'ю': putchar('y'); putchar('u'); break;
-                case L'я': putchar('y'); putchar('a'); break;
-                case L'А': putchar('A'); break;
-                case L'Б': putchar('B'); break;
-                case L'В': putchar('V'); break;
-                case L'Г': putchar('G'); break;
-                case L'Д': putchar('D'); break;
-                case L'Е': putchar('E'); break;
-                case L'Ё': putchar('Y'); putchar('O'); break;
-                case L'Ж': putchar('Z'); putchar('H'); break;
-                case L'З': putchar('Z'); break;
-                case L'И': putchar('I'); break;
-                case L'Й': putchar('J'); break;
-                case L'К': putchar('K'); break;
-                case L'Л': putchar('L'); break;
-                case L'М': putchar('M'); break;
-                case L'Н': putchar('N'); break;
-                case L'О': putchar('O'); break;
-                case L'П': putchar('P'); break;
-                case L'Р': putchar('R'); break;
-                case L'С': putchar('S'); break;
-                case L'Т': putchar('T'); break;
-                case L'У': putchar('U'); break;
-                case L'Ф': putchar('F'); break;
-                case L'Х': putchar('H'); break;
-                case L'Ц': putchar('C'); break;
-                case L'Ч': putchar('C'); putchar('H'); break;
-                case L'Ш': putchar('S'); putchar('H'); break;
-                case L'Щ': putchar('S'); putchar('H'); putchar('C'); putchar('H'); break;
-                case L'Ъ': putchar('\"'); break;
-                case L'Ы': putchar('Y'); break;
-                case L'Ь': putchar('\''); break;
-                case L'Э': putchar('E'); break;
-                case L'Ю': putchar('Y'); putchar('U'); break;
-                case L'Я': putchar('Y'); putchar('A'); break;
-                default: putchar(text[i][j]); break;
+                case L'а': putwchar('a'); break;
+                case L'б': putwchar('b'); break;
+                case L'в': putwchar('v'); break;
+                case L'г': putwchar('g'); break;
+                case L'д': putwchar('d'); break;
+                case L'е': putwchar('e'); break;
+                case L'ё': putwchar('y'); putwchar('o'); break;
+                case L'ж': putwchar('z'); putwchar('h'); break;
+                case L'з': putwchar('z'); break;
+                case L'и': putwchar('i'); break;
+                case L'й': putwchar('j'); break;
+                case L'к': putwchar('k'); break;
+                case L'л': putwchar('l'); break;
+                case L'м': putwchar('m'); break;
+                case L'н': putwchar('n'); break;
+                case L'о': putwchar('o'); break;
+                case L'п': putwchar('p'); break;
+                case L'р': putwchar('r'); break;
+                case L'с': putwchar('s'); break;
+                case L'т': putwchar('t'); break;
+                case L'у': putwchar('u'); break;
+                case L'ф': putwchar('f'); break;
+                case L'х': putwchar('h'); break;
+                case L'ц': putwchar('c'); break;
+                case L'ч': putwchar('c'); putwchar('h'); break;
+                case L'ш': putwchar('s'); putwchar('h'); break;
+                case L'щ': putwchar('s'); putwchar('h'); putwchar('c'); putwchar('h'); break;
+                case L'ъ': putwchar('\"'); break;
+                case L'ы': putwchar('y'); break;
+                case L'ь': putwchar('\''); break;
+                case L'э': putwchar('e'); break;
+                case L'ю': putwchar('y'); putwchar('u'); break;
+                case L'я': putwchar('y'); putwchar('a'); break;
+                case L'А': putwchar('A'); break;
+                case L'Б': putwchar('B'); break;
+                case L'В': putwchar('V'); break;
+                case L'Г': putwchar('G'); break;
+                case L'Д': putwchar('D'); break;
+                case L'Е': putwchar('E'); break;
+                case L'Ё': putwchar('Y'); putwchar('o'); break;
+                case L'Ж': putwchar('Z'); putwchar('h'); break;
+                case L'З': putwchar('Z'); break;
+                case L'И': putwchar('I'); break;
+                case L'Й': putwchar('J'); break;
+                case L'К': putwchar('K'); break;
+                case L'Л': putwchar('L'); break;
+                case L'М': putwchar('M'); break;
+                case L'Н': putwchar('N'); break;
+                case L'О': putwchar('O'); break;
+                case L'П': putwchar('P'); break;
+                case L'Р': putwchar('R'); break;
+                case L'С': putwchar('S'); break;
+                case L'Т': putwchar('T'); break;
+                case L'У': putwchar('U'); break;
+                case L'Ф': putwchar('F'); break;
+                case L'Х': putwchar('H'); break;
+                case L'Ц': putwchar('C'); break;
+                case L'Ч': putwchar('C'); putwchar('h'); break;
+                case L'Ш': putwchar('S'); putwchar('h'); break;
+                case L'Щ': putwchar('S'); putwchar('h'); putwchar('c'); putwchar('h'); break;
+                case L'Ъ': putwchar('\"'); break;
+                case L'Ы': putwchar('Y'); break;
+                case L'Ь': putwchar('\''); break;
+                case L'Э': putwchar('E'); break;
+                case L'Ю': putwchar('Y'); putwchar('u'); break;
+                case L'Я': putwchar('Y'); putwchar('a'); break;
+                default: putwchar(text[i][j]); break;
             }
         }
     }

@@ -28,12 +28,12 @@ int main(int argc, char const *argv[]) {
             break;
         case 2:
             // Определяет сколько раз в введенной строке встречается слово, заданное пользователем.
-            wchar_t word[35];
+            char word[35];
             int i = 0;
             for (i; argv[2][i] != '\0'; i++) {
                 word[i] = tolower(argv[2][i]);  // Преобразуем в нижний регистр
             }
-            word[i+1] = '\0';  // Завершаем строку
+            word[i+1] = L'\0';  // Завершаем строку
             func2(word);
             break;
         case 3:
