@@ -8,17 +8,20 @@ int mystrlen(const char *string) {
     return counter;
 }
 
+// Является ли символ разделителем только для больший символов
 int isDemiterwchar(wchar_t c) {
     return c == L' ' || c == L'\n' || c == L'.' || c == L',' || c == L';' || c == L':' || 
            c == L'?' || c == L'!' || c == L'=' || c == L'(' || c == L')' || c == L'\"' || 
            c == L'\0';
 }
 
+// Является ли символ разделителем
 int isDemiter(char c) {
     return c == ' ' || c == '\n' || c == '.' || c == ',' || c == ';' || c == ':' || c == '?' || 
            c == '=' || c == '(' || c == ')' || c == '\"' || c == '\0';
 }
 
+// Функция сравнивающая строчки
 int mystrcmp(const char *word1, const char *word2) {
     int len1 = mystrlen(word1);
     int len2 = mystrlen(word2);
@@ -36,15 +39,13 @@ int mystrcmp(const char *word1, const char *word2) {
 
 // Функция подсчета символов в тексте
 void func1() {
-    wchar_t text[TERM_NUM][MAX_LEN_STR];  // Массив для хранения текста
-    int counts[65536] = {0};              // Массив для подсчета символов
+    wchar_t text[TERM_NUM][MAX_LEN_STR];  
+    int counts[65536] = {0};          
 
-    // Чтение строк
     for (int i = 0; i < TERM_NUM; i++) {
         fgetws(text[i], MAX_LEN_STR, stdin);
     }
 
-    // Подсчет символов
     for (int i = 0; i < TERM_NUM; i++) {
         for (int j = 0; text[i][j] != L'\0'; j++) {
             wchar_t ch = text[i][j];
@@ -52,7 +53,6 @@ void func1() {
         }
     }
 
-    // Вывод результатов
     printf("Символ\t\tКол-во\n");
     for (int i = 0; i < 65536; i++) {
         if (counts[i] > 0) {
@@ -68,30 +68,27 @@ void func1() {
 
 void func2(const char *word1) {
     int count = 0;
-    char text[TERM_NUM][MAX_LEN_STR]; // 42 строки, каждая до 100 символов
-    char word2[35] = {0}; // Для хранения текущего слова
+    char text[TERM_NUM][MAX_LEN_STR]; 
+    char word2[35] = {0}; 
 
     for (int i = 0; i < TERM_NUM; i++) 
         fgets(text[i], MAX_LEN_STR, stdin);
 
-    // Проход по всем строкам
     for (int i = 0; i < 42; i++) {
         int k = 0;
         while (text[i][k] != '\0') {
             int j = 0;
-            // Извлечение слова
             while (!isDemiter(text[i][k]) && text[i][k] != '\0') {
                 word2[j] = text[i][k];
                 k++;
                 j++;
             }
-            word2[j] = '\0'; // Завершение слова
+            word2[j] = '\0'; 
 
             if (mystrcmp(word1, word2)) {
                 count++;
             }
 
-            // Пропуск разделителей
             while (isDemiter(text[i][k]) && text[i][k] != '\0') {
                 k++;
             }
@@ -114,49 +111,37 @@ void func3() {
         }
     }
 
-    // Определяем последнюю букву первого слова
     for (int i = 0; text[0][i] != L'\0'; i++) {
         if (isDemiterwchar(text[0][i])) {
             if (i > 0) {
-                ch = text[0][i-1]; // Последняя буква первого слова
+                ch = text[0][i-1];
             }
             break;
         }
     }
 
-    // Если не удалось определить последнюю букву, завершаем
-    if (ch == L'\0') {
-        wprintf(L"Не удалось определить последнюю букву первого слова.\n");
-        return;
-    }
-
-    // Подсчет слов, начинающихся с `ch`
     for (int i = 0; i < TERM_NUM; i++) {
         int k = 0;
         while (text[i][k] != L'\0') {
             int j = 0;
 
-            // Извлечение слова
             while (!isDemiterwchar(text[i][k]) && text[i][k] != L'\0') {
                 word[j] = text[i][k];
                 k++;
                 j++;
             }
-            word[j] = L'\0'; // Завершение слова
+            word[j] = L'\0';
 
-            // Сравнение первой буквы слова с `ch`
             if (word[0] == ch) {
                 count++;
             }
 
-            // Пропуск разделителей
             while (isDemiterwchar(text[i][k]) && text[i][k] != L'\0') {
                 k++;
             }
         }
     }
 
-    // Вывод результата
     wprintf(L"Количество слов, начинающихся с '%lc': %d\n", ch, count);
 }
 
