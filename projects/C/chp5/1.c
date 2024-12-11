@@ -1,4 +1,3 @@
-// Масив из английского алфавита и вывод
 #include <stdio.h>
 
 int main(void){

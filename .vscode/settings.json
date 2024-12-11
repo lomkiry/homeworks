@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stringfunc.h": "c",
+        "ctype.h": "c",
+        "wchar.h": "c",
+        "stdio.h": "c"
+    }
+}
